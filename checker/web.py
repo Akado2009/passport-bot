@@ -24,10 +24,10 @@ def selenium_check_slots(url: str) -> bool:
         driver = init_driver()
         driver.maximize_window()
         driver.get(url)
-        logging.info("DRIVER STARTED", driver)
+        logging.info("DRIVER STARTED")
         screenshot = get_screenshot(driver, CAPTCHA_IMG_ID)
         captcha = solve_captcha(screenshot)
-        logging.info("CAPTCHA SOLVED", captcha)
+        logging.info(f"CAPTCHA SOLVED {captcha}")
         captcha_input = driver.find_element(By.ID, CAPTCHA_INPUT_ID)
         captcha_input.send_keys(captcha)
         captcha_input.send_keys(Keys.ENTER)
@@ -48,6 +48,8 @@ def selenium_check_slots(url: str) -> bool:
 
 def init_driver() -> webdriver.Chrome:
     options = webdriver.ChromeOptions()
+
+    options.add_argument('--no-sandbox')
     # options.add_experimental_option("detach", True)
     options.add_argument('--headless')
     # options.add_argument("--kiosk")

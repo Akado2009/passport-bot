@@ -23,6 +23,6 @@ apt-get -y install google-chrome-stable
 wget -N https://storage.googleapis.com/chrome-for-testing-public/122.0.6261.94/linux64/chromedriver-linux64.zip -P ~/
 unzip ~/chromedriver-linux64.zip -d ~/
 rm ~/chromedriver-linux64.zip
-mv -f ~/chromedriver /usr/local/bin/chromedriver
+mv -f ~/chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
 chown root:root /usr/local/bin/chromedriver
 chmod 0755 /usr/local/bin/chromedriver
