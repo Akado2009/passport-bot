@@ -19,15 +19,12 @@ from checker.const import (
 
 def selenium_check_slots(url: str) -> bool:
     logger = logging.getLogger(__name__)
-    logger.info(f'IN SELENIUM CHECK')
     try:
         driver = init_driver()
         driver.maximize_window()
         driver.get(url)
-        logging.info("DRIVER STARTED")
         screenshot = get_screenshot(driver, CAPTCHA_IMG_ID)
         captcha = solve_captcha(screenshot)
-        logging.info(f"CAPTCHA SOLVED {captcha}")
         captcha_input = driver.find_element(By.ID, CAPTCHA_INPUT_ID)
         captcha_input.send_keys(captcha)
         captcha_input.send_keys(Keys.ENTER)
