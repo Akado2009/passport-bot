@@ -12,3 +12,4 @@ Just a bot to track passport slots in the russian consulat.
 x = re.search(r'[0-9]{5}', txt) (Filters.Regexp - take from there)
 2. some consulats have different text (no Извините)
 3. install chromedriver... https://skolo.online/documents/webscrapping/#step-2-install-chromedriver
+4. database persistency
