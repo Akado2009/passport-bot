@@ -18,26 +18,29 @@ from checker.const import (
 )
 
 def selenium_check_slots(url: str) -> bool:
-    driver = init_driver()
-    driver.maximize_window()
-    driver.get(url)
-    print("DRIVER STARTED", driver)
-    screenshot = get_screenshot(driver, CAPTCHA_IMG_ID)
-    captcha = solve_captcha(screenshot)
-    print("CAPTCHA SOLVED", captcha)
-    captcha_input = driver.find_element(By.ID, CAPTCHA_INPUT_ID)
-    captcha_input.send_keys(captcha)
-    captcha_input.send_keys(Keys.ENTER)
+    try:
+        driver = init_driver()
+        driver.maximize_window()
+        driver.get(url)
+        print("DRIVER STARTED", driver)
+        screenshot = get_screenshot(driver, CAPTCHA_IMG_ID)
+        captcha = solve_captcha(screenshot)
+        print("CAPTCHA SOLVED", captcha)
+        captcha_input = driver.find_element(By.ID, CAPTCHA_INPUT_ID)
+        captcha_input.send_keys(captcha)
+        captcha_input.send_keys(Keys.ENTER)
 
-    wait = WebDriverWait(driver, 30)
+        wait = WebDriverWait(driver, 30)
 
-    button_input = wait.until(
-        EC.visibility_of_all_elements_located((
-            By.ID,
-            BUTTON_ID,
-        ))
-    )
-    button_input[0].send_keys(Keys.ENTER)
+        button_input = wait.until(
+            EC.visibility_of_all_elements_located((
+                By.ID,
+                BUTTON_ID,
+            ))
+        )
+        button_input[0].send_keys(Keys.ENTER)
+    except Exception as e:
+        print("ERROR WOWOWOWOW", e)
     return NOT_FOUND_TEXT not in driver.page_source        
 
 

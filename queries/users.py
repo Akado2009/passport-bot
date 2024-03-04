@@ -9,7 +9,8 @@ from sqlalchemy import (
 from typing import (
     Any,
     List,
-    Optional
+    Optional,
+    Dict
 )
 from dbal.user import user_table
 
@@ -23,15 +24,9 @@ def check_if_exists(id: int, country: str) -> Optional[int]:
         return sess.execute(stmt).one_or_none()
 
 
-def create_user(id: int, country: str, c_url_name: str) -> None:
+def create_user(data: Dict) -> None:
     with session() as sess:
-        create_stmt = insert(user_table).values(
-            {
-                'user_id': id,
-                'country': country,
-                'country_url': c_url_name
-            }
-        )
+        create_stmt = insert(user_table).values(data)
         sess.execute(create_stmt)
         sess.commit()
 
@@ -71,14 +66,14 @@ def get_user_subscriptions(user_id: int) -> List[Any]:
 
 def delete_user_subscription(user_id: int, country: str) -> None:
     with session() as sess:
-        return sess.execute(
-            delete(
-                user_table
-            ).where(
-                user_table.c.user_id == user_id,
-                user_table.c.country == country
-            )
+        delete_stmt = delete(
+            user_table
+        ).where(
+            user_table.c.user_id == user_id,
+            user_table.c.country == country
         )
+        sess.execute(delete_stmt)
+        sess.commit()
     
 
 def get_distinct_subs_for_checker() -> List[Any]:

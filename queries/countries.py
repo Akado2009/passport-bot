@@ -17,6 +17,6 @@ def get_countries_names() -> Dict:
         ).all()
 
     return {
-        c[0]: c[1] for c in result
+        c[1]: c[0] for c in result
     }
 
