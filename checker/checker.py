@@ -48,5 +48,4 @@ async def spam_if_found(domain: str, app: Any) -> None:
 
 
 def check_slots(domain: str, id: int, code: str, ems: str) -> bool:
-    print("selenium triggered")
     return selenium_check_slots(KDMID_TEMPLATE.format(domain, id, code, ems))
