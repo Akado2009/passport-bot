@@ -8,7 +8,7 @@ from twocaptcha import TwoCaptcha
 from base64 import b64encode
 import io
 from PIL import Image
-
+import logging
 from checker.const import (
     BUTTON_ID,
     CAPTCHA_IMG_ID,
@@ -18,14 +18,16 @@ from checker.const import (
 )
 
 def selenium_check_slots(url: str) -> bool:
+    logger = logging.getLogger(__name__)
+    logger.info(f'IN SELENIUM CHECK')
     try:
         driver = init_driver()
         driver.maximize_window()
         driver.get(url)
-        print("DRIVER STARTED", driver)
+        logging.info("DRIVER STARTED", driver)
         screenshot = get_screenshot(driver, CAPTCHA_IMG_ID)
         captcha = solve_captcha(screenshot)
-        print("CAPTCHA SOLVED", captcha)
+        logging.info("CAPTCHA SOLVED", captcha)
         captcha_input = driver.find_element(By.ID, CAPTCHA_INPUT_ID)
         captcha_input.send_keys(captcha)
         captcha_input.send_keys(Keys.ENTER)
@@ -40,7 +42,7 @@ def selenium_check_slots(url: str) -> bool:
         )
         button_input[0].send_keys(Keys.ENTER)
     except Exception as e:
-        print("ERROR WOWOWOWOW", e)
+        logging.info("ERROR WOWOWOWOW", e)
     return NOT_FOUND_TEXT not in driver.page_source        
 
 
