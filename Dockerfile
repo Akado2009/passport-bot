@@ -7,5 +7,6 @@ COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
 COPY . .
-
-CMD [“python3”, “./bot.py”] 
+RUN which python
+RUN which python3
+CMD ["python3", "/app/bot.py"] 
