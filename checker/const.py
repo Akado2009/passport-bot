@@ -1,5 +1,5 @@
 KDMID_TEMPLATE = "https://{}.kdmid.ru/queue/orderinfo.aspx?id={}&cd={}&ems={}"
-QUEUE_TIMEOUT = 60
+QUEUE_TIMEOUT = 10 * 60
 SPAM_TIMEOUT = 2
 SPAM_LIMIT = 10
 CAPTCHA_IMG_ID = "ctl00_MainContent_imgSecNum"
