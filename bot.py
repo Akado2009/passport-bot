@@ -122,7 +122,6 @@ async def create_subscription(update: Update, context: ContextTypes.DEFAULT_TYPE
 async def subscriptions(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user = update.message.from_user
     subs = get_user_subscriptions(user.id)
-    print(subs)
     p_subs = [f'*{s[2]}*' for s in subs]
     if len(p_subs) == 0:
         await update.message.reply_text(
@@ -131,11 +130,23 @@ async def subscriptions(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
         )
     else:
         await update.message.reply_text(
-            f"Твои подписки:\n {'\n'.join(p_subs)}",
+            f"Твои подписки:\n\n{'\n'.join(p_subs)}",
             reply_to_message_id=update.message.id,
             parse_mode=constants.ParseMode.MARKDOWN_V2
         )
 
+
+async def cities(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    names = get_countries_names()
+    available_cities = [
+        f"*{names[s].replace('-', '\-').strip()}*: {s} в ссылке"
+        for s in names
+    ]
+    await update.message.reply_text(
+        f"Доступные города:\n\n{'\n'.join(available_cities)}",
+        reply_to_message_id=update.message.id,
+        parse_mode=constants.ParseMode.MARKDOWN_V2
+    )
 
 async def unsubscribe(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     user = update.message.from_user
@@ -201,6 +212,8 @@ def main() -> None:
 
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("subscriptions", subscriptions))
+    application.add_handler(CommandHandler("cities", cities))
+
     application.add_handler(subscribe_handler)
     application.add_handler(unsubscribe_handler)
     pool = concurrent.futures.ThreadPoolExecutor(max_workers=2)

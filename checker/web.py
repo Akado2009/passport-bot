@@ -23,7 +23,7 @@ def selenium_check_slots(url: str) -> bool:
         driver = init_driver()
         driver.maximize_window()
         driver.get(url)
-        screenshot = get_screenshot(driver, CAPTCHA_IMG_ID)
+        screenshot = get_screenshot(driver, CAPTCHA_IMG_ID, url)
         captcha = solve_captcha(screenshot)
         captcha_input = driver.find_element(By.ID, CAPTCHA_INPUT_ID)
         captcha_input.send_keys(captcha)
@@ -39,7 +39,7 @@ def selenium_check_slots(url: str) -> bool:
         )
         button_input[0].send_keys(Keys.ENTER)
     except Exception as e:
-        logging.info("ERROR WOWOWOWOW", e)
+        logger.info("ERROR WOWOWOWOW", e)
     return NOT_FOUND_TEXT not in driver.page_source        
 
 
@@ -55,13 +55,14 @@ def init_driver() -> webdriver.Chrome:
     return driver
 
 
-def get_screenshot(driver, id) -> bytes:
-    image = driver.find_element(By.ID, "ctl00_MainContent_imgSecNum")
+def get_screenshot(driver, id, url) -> bytes:
+    image = driver.find_element(By.ID, id)
     png = image.screenshot_as_png
     im = Image.open(BytesIO(png))
-    width, height = im.size
-    new_width = width//3
-    im = im.crop((new_width, 0, new_width * 2, height))
+    if 'belgrad' in url:
+        width, height = im.size
+        new_width = width//3
+        im = im.crop((new_width, 0, new_width * 2, height))
     img_byte_arr = io.BytesIO()
     # image.save expects a file-like as a argument
     im.save(img_byte_arr, format='png')
