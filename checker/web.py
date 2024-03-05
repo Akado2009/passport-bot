@@ -26,6 +26,7 @@ def selenium_check_slots(url: str) -> bool:
         driver.get(url)
         screenshot = get_screenshot(driver, CAPTCHA_IMG_ID, url)
         captcha = solve_captcha(screenshot)
+        logger.info("GOT CAPTCHA", captcha)
         captcha_input = driver.find_element(By.ID, CAPTCHA_INPUT_ID)
         captcha_input.send_keys(captcha)
         captcha_input.send_keys(Keys.ENTER)
@@ -58,10 +59,13 @@ def init_driver() -> webdriver.Chrome:
 
 
 def get_screenshot(driver, id, url) -> bytes:
+    logger = logging.getLogger(__name__)
+    logger.info("GETTING A SCREENSHOT", url)
     image = driver.find_element(By.ID, id)
     png = image.screenshot_as_png
     im = Image.open(BytesIO(png))
     if 'belgrad' in url:
+        logger.info("SPLITTING", url)
         width, height = im.size
         new_width = width//3
         im = im.crop((new_width, 0, new_width * 2, height))
