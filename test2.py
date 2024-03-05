@@ -4,15 +4,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-from PIL import Image, ImageFilter, ImageOps
-from scipy.ndimage import gaussian_filter
-import numpy as np
-import pytesseract
-from scipy import ndimage
+from PIL import Image
 from io import BytesIO
-import cv2
 from twocaptcha import TwoCaptcha
-import time
 from base64 import b64encode
 import io
 
@@ -21,9 +15,6 @@ def get_screenshot(driver, id) -> bytes:
     image = driver.find_element(By.ID, "ctl00_MainContent_imgSecNum")
     png = image.screenshot_as_png
     im = Image.open(BytesIO(png))
-    width, height = im.size
-    new_width = width//3
-    im = im.crop((new_width, 0, new_width * 2, height))
     img_byte_arr = io.BytesIO()
     # image.save expects a file-like as a argument
     im.save(img_byte_arr, format='png')
@@ -36,13 +27,13 @@ def solve_captcha(b64image) -> str:
     solver = TwoCaptcha("47c6ec2a004a531edab27bf6068d3516")
 
     result = solver.normal(b64image, numeric=1)
+    print(result)
     return result["code"]
 
-URL = "https://belgrad.kdmid.ru/queue/orderinfo.aspx?id=75490&cd=d645e055&ems=97BF4526"
+URL = "https://brussels.kdmid.ru/queue/orderinfo.aspx?id=65210&cd=063551bd&ems=11CB4602"
 
 options = webdriver.ChromeOptions()
-options.add_experimental_option("detach", True)
-options.add_argument("--kiosk")
+options.add_argument("--headless")
 
 driver = webdriver.Chrome(options=options)
 driver.maximize_window()
@@ -54,17 +45,17 @@ captcha_input = driver.find_element(By.ID, "ctl00_MainContent_txtCode")
 captcha_input.send_keys(captcha)
 captcha_input.send_keys(Keys.ENTER)
 wait = WebDriverWait(driver, 30)
-
+png = driver.save_screenshot("wow.png")
 button_input = wait.until(
     EC.visibility_of_all_elements_located((
         By.ID,
         "ctl00_MainContent_ButtonB"
     ))
 )
-print(button_input)
 button_input[0].send_keys(Keys.ENTER)
 
-text = "Извините, но в настоящий момент на интересующее Вас консульское действие в системе предварительной записи нет свободного времени."
+text = "в настоящий момент на интересующее Вас консульское действие"
 
+print(driver.page_source)
 if text in driver.page_source:
     print("NOT FOUND:(")

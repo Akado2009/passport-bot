@@ -19,6 +19,7 @@ from checker.const import (
 
 def selenium_check_slots(url: str) -> bool:
     logger = logging.getLogger(__name__)
+    result = False
     try:
         driver = init_driver()
         driver.maximize_window()
@@ -38,9 +39,10 @@ def selenium_check_slots(url: str) -> bool:
             ))
         )
         button_input[0].send_keys(Keys.ENTER)
+        result = NOT_FOUND_TEXT not in driver.page_source 
     except Exception as e:
         logger.info("ERROR WOWOWOWOW", e)
-    return NOT_FOUND_TEXT not in driver.page_source        
+    return result        
 
 
 def init_driver() -> webdriver.Chrome:
