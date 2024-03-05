@@ -29,10 +29,7 @@ def selenium_check_slots(url: str) -> bool:
         captcha_input = driver.find_element(By.ID, CAPTCHA_INPUT_ID)
         captcha_input.send_keys(captcha)
         captcha_input.send_keys(Keys.ENTER)
-        png = driver.get_screenshot_as_png()
-        logger.info("got a screenshot")
-        return png
-        wait = WebDriverWait(driver, 30)
+        wait = WebDriverWait(driver, 60)
 
         button_input = wait.until(
             EC.visibility_of_all_elements_located((
