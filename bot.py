@@ -65,10 +65,10 @@ async def subscribe(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 async def create_subscription(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     u_input = update.message.text
     names = get_countries_names()
-    country = u_input.split(".")[0].strip("http://").strip("https://")
+    country = u_input.split(".")[0].replace("http://", '').replace("https://", '')
     if country not in names:
         await update.message.reply_text(
-            f"Такого города пока нет, может, cкоро добавим! DEBUG {u_input} && {country}",
+            f"Такого города пока нет, может, cкоро добавим!",
             reply_markup=ReplyKeyboardRemove(),
             reply_to_message_id=update.message.id,
         )
