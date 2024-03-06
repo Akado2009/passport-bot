@@ -13,6 +13,7 @@ from checker.const import (
     BUTTON_ID,
     CAPTCHA_IMG_ID,
     CAPTCHA_INPUT_ID,
+    CAPTCHA_INPUT_BUTTON_ID,
     TWOCAPTCHA_TOKEN,
     NOT_FOUND_TEXT,
 )
@@ -20,7 +21,6 @@ from checker.const import (
 def selenium_check_slots(url: str) -> bool:
     logger = logging.getLogger(__name__)
     result = False
-    screen = None
     try:
         driver = init_driver()
         driver.maximize_window()
@@ -29,9 +29,9 @@ def selenium_check_slots(url: str) -> bool:
         captcha = solve_captcha(screenshot)
         captcha_input = driver.find_element(By.ID, CAPTCHA_INPUT_ID)
         captcha_input.send_keys(captcha)
-        captcha_input.send_keys(Keys.ENTER)
-        wait = WebDriverWait(driver, 60)
-        screen = driver.get_screenshot_as_png()
+        captcha_button = driver.find_element(By.ID, CAPTCHA_INPUT_BUTTON_ID)
+        captcha_button.send_keys(Keys.ENTER)
+        wait = WebDriverWait(driver, 120)
         button_input = wait.until(
             EC.visibility_of_all_elements_located((
                 By.ID,
@@ -42,7 +42,7 @@ def selenium_check_slots(url: str) -> bool:
         result = NOT_FOUND_TEXT not in driver.page_source 
     except Exception as e:
         logger.info("ERROR WOWOWOWOW", e)
-    return screen        
+    return result        
 
 
 def init_driver() -> webdriver.Chrome:

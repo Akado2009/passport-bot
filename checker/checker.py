@@ -24,15 +24,15 @@ async def check_queue(app: Any) -> None:
         subs = get_distinct_subs_for_checker()
         for sub in subs:
             domain = sub[0]
-            screen = check_slots(domain, sub[1], sub[2], sub[3])
-            if screen:
-                await spam_if_found(domain, app, screen)
+            found = check_slots(domain, sub[1], sub[2], sub[3])
+            if found:
+                await spam_if_found(domain, app)
             else:
                 logger = logging.getLogger(__name__)
                 logger.info(f'Not found for {domain}')
 
 
-async def spam_if_found(domain: str, app: Any, screen: Any) -> None:
+async def spam_if_found(domain: str, app: Any) -> None:
     domain_subs = get_domain_subscriptions(domain)
     for i in range(0, len(domain_subs), SPAM_LIMIT):
         await asyncio.sleep(SPAM_TIMEOUT)
@@ -40,10 +40,6 @@ async def spam_if_found(domain: str, app: Any, screen: Any) -> None:
             sub = domain_subs[j]
             url = KDMID_TEMPLATE.format(
                 sub[3], sub[4], sub[5], sub[6]
-            )
-            await app.bot.send_photo(
-                sub[1],
-                screen,
             )
             await app.bot.send_message(
                 chat_id=sub[1],
