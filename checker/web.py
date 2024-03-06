@@ -31,6 +31,7 @@ def selenium_check_slots(url: str) -> bool:
         captcha_input.send_keys(captcha)
         captcha_button = driver.find_element(By.ID, CAPTCHA_INPUT_BUTTON_ID)
         captcha_button.send_keys(Keys.ENTER)
+        result = driver.get_screenshot_as_png()
         wait = WebDriverWait(driver, 120)
         button_input = wait.until(
             EC.visibility_of_all_elements_located((
@@ -42,7 +43,8 @@ def selenium_check_slots(url: str) -> bool:
         result = NOT_FOUND_TEXT not in driver.page_source 
     except Exception as e:
         logger.info("ERROR WOWOWOWOW", e)
-    return result        
+        return "таймаут", result
+    return "нормально", result        
 
 
 def init_driver() -> webdriver.Chrome:
