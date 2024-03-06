@@ -84,6 +84,7 @@ def get_distinct_subs_for_checker() -> List[Any]:
                 user_table.c.number,
                 user_table.c.code,
                 user_table.c.ems,
+                user_table.c.user_id
             ).where(
                 user_table.c.number != None,
                 user_table.c.code != None,
